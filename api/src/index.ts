@@ -1,15 +1,11 @@
-import express from "express";
+import { app } from "./app";
+import { env } from "./config/env";
 
-const app = express();
-const port = Number(process.env.PORT) || 4000;
-const host = process.env.HOST || "0.0.0.0";
-
-app.use(express.json());
-
-app.get("/health", (_req, res) => {
-	res.json({ ok: true });
+const server = app.listen(env.port, env.host, () => {
+	console.log(`API listening on http://${env.host}:${env.port}`);
 });
 
-app.listen(port, host, () => {
-	console.log(`API listening on http://${host}:${port}`);
+server.on("error", (error) => {
+	console.error("API server failed to start", error);
+	process.exit(1);
 });
